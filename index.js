@@ -23,8 +23,9 @@ app.post('/api/courses', (req, res) => {
 
     if (result.error) {
         //400 Bad Request
-        res.status(400).send(result.error.details[0].message);
-        return;
+        
+        return res.status(400).send(result.error.details[0].message);
+       
     }
 
     const course = {
@@ -77,8 +78,20 @@ function validateCourse(course) {
 
 app.get('/api/courses/:id', (req, res) => {
    const course = courses.find(c => c.id === parseInt(req.params.id));
-   if (!course) res.status(404).send('The course with the given ID wasnot found.');
+   if (!course) return res.status(404).send('The course with the given ID wasnot found.');
    res.send(course);    
+});
+
+app.delete('/api/courses/:id', (req, res) => {
+
+    const course = courses.find(c => c.id === parseInt(req.params.id));
+   if (!course) res.status(404).send('The course with the given ID wasnot found.');
+
+   const index = courses.indexOf(course);
+    courses.splice(index, 1);
+
+   res.send(course);
+
 });
 
 //Port
